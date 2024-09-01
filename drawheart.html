@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Heart with Text</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #heart-text, #heart-sub-text {
+            font-family: Arial, sans-serif;
+            font-size: 8px;
+            fill: white;
+        }
+    </style>
+</head>
+
+<body>
+    <svg width="300" height="300" viewBox="0 0 100 100">
+        <path id="heart-path" d="M50 30 L40 20 A10 10 0 0 0 20 40 L50 70 L80 40 A10 10 0 0 0 60 20 Z" fill="none"
+            stroke="red" stroke-width="2" />
+        <text id="heart-text" x="50" y="37" text-anchor="middle" dominant-baseline="middle"></text>
+        <text id="heart-sub-text" x="50" y="48" text-anchor="middle" dominant-baseline="middle"></text>
+    </svg>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const path = document.getElementById('heart-path');
+            const text = document.getElementById('heart-text');
+            const subText = document.getElementById('heart-sub-text');
+            const length = path.getTotalLength();
+
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+
+            // Reverse the direction of the stroke
+            path.style.strokeDashoffset = -length;
+
+            setTimeout(() => {
+                path.style.transition = 'stroke-dashoffset 2s ease-in-out';
+                path.style.strokeDashoffset = '0';
+            }, 100);
+
+            setTimeout(() => {
+                path.style.transition = 'fill 0.5s ease-in-out';
+                path.style.fill = 'red';
+            }, 2100);
+
+            setTimeout(async () => {
+
+                function addAnimationText(message, element) {
+                    return new Promise((resolve) => {
+                        let i = 0;
+                        function typeWriter() {
+                            if (i < message.length) {
+                                element.textContent += message.charAt(i);
+                                i++;
+                                setTimeout(typeWriter, 150);
+                            } else {
+                                resolve();  // Resolve the promise when the animation is complete
+                            }
+                        }
+                        typeWriter();
+                    });
+                }
+
+                await addAnimationText("Yêu", text);
+                await addAnimationText("Lan Anh", subText);
+            }, 2600);
+        });
+    </script>
+</body>
+
+</html>
